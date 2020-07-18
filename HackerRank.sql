@@ -87,3 +87,46 @@ SELECT DISTINCT city
 from station
 WHERE city LIKE '%[^AEIOU]';
 
+--Revising Aggregations - Averages
+SELECT AVG(population)
+FROM city
+WHERE district='california';
+
+--Revising Aggregations - The Sum Function 
+SELECT SUM(population)
+FROM city
+WHERE district='california';
+
+--Revising Aggregations - The Count Function 
+SELECT COUNT(id)
+FROM city
+WHERE population>100000;
+
+--Type of Triangle 
+SELECT IF(A+B <= C,'Not A Triangle',IF(A = B AND A = C,'Equilateral',IF(A = B OR A = C OR B = C,'Isosceles','Scalene')))
+FROM TRIANGLES;
+                                                             
+--Employee Salaries 
+SELECT name
+FROM employee
+WHERE salary>2000 AND months<10
+ORDER BY employee_id asc;
+  
+ --Top Earners 
+  select (salary * months) as earnings ,count(*) from employee group by 1 order by earnings desc limit 1;
+                                                                        
+--The Blunder
+SELECT CEIL((AVG(SALARY))-(AVG(REPLACE(SALARY,'0','')))) FROM EMPLOYEES;
+                                       
+--Population Density Difference  
+SELECT MAX(population)-MIN(population)
+FROM city;
+                                       
+--Japan Population
+SELECT SUM(population)
+FROM city
+WHERE countrycode='jpn';
+                                       
+--Average Population                                        
+SELECT ROUND(AVG(population))
+FROM city;                                                                        
