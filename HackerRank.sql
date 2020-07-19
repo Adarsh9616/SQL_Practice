@@ -129,4 +129,111 @@ WHERE countrycode='jpn';
                                        
 --Average Population                                        
 SELECT ROUND(AVG(population))
-FROM city;                                                                        
+FROM city;  
+
+--Weather Observation Station 2 
+SELECT ROUND(SUM(lat_n),2),ROUND(SUM(long_w),2)
+FROM station;
+
+--Weather Observation Station 13 
+SELECT ROUND(SUM(lat_n),4)
+FROM station
+WHERE lat_n>38.7880 AND lat_n<137.2345;
+
+--Weather Observation Station 14 
+SELECT ROUND(MAX(lat_n),4)
+FROM station
+WHERE lat_n<137.2345;
+
+--Weather Observation Station 15 
+SELECT ROUND(long_w,4)
+FROM station
+WHERE lat_n<137.2345
+ORDER BY lat_n DESC
+LIMIT 1;
+
+--Weather Observation Station 16 
+SELECT ROUND(lat_n,4)
+FROM station
+WHERE lat_n>38.7780
+ORDER BY lat_n ASC
+LIMIT 1;
+
+--Weather Observation Station 17 
+SELECT ROUND(long_w,4)
+FROM station
+WHERE lat_n>38.7780
+ORDER BY lat_n ASC
+LIMIT 1;
+
+--Weather Observation Station 18 
+SELECT ROUND(abs((MAX(LAT_N) - MIN(LAT_N)))+ABS((MAX(LONG_W)-MIN(LONG_W))),4) FROM STATION;
+
+--Weather Observation Station 19 
+select round(sqrt(power(min(lat_n)-max(lat_n),2)+power(min(long_w)-max(long_w),2)),4) from station;
+
+--Weather Observation Station 20 
+SELECT ROUND(AVG(S.LAT_N), 4) FROM STATION S WHERE
+ABS((SELECT COUNT(*) FROM STATION WHERE LAT_N < S.LAT_N) -
+(SELECT COUNT(*) FROM STATION WHERE LAT_N > S.LAT_N)) <= 1;
+
+--SQL Project Planning 
+SET sql_mode = '';
+SELECT Start_Date, End_Date
+FROM 
+    (SELECT Start_Date FROM Projects WHERE Start_Date NOT IN (SELECT End_Date FROM Projects)) a,
+    (SELECT End_Date FROM Projects WHERE End_Date NOT IN (SELECT Start_Date FROM Projects)) b 
+WHERE Start_Date < End_Date
+GROUP BY Start_Date 
+ORDER BY DATEDIFF(End_Date, Start_Date), Start_Date;
+
+--Asian Population 
+SELECT SUM(CITY.POPULATION) 
+FROM CITY, COUNTRY
+WHERE CITY.COUNTRYCODE = COUNTRY.CODE AND COUNTRY.CONTINENT = 'Asia';
+
+--African Cities 
+SELECT city.name
+FROM CITY, COUNTRY
+WHERE CITY.COUNTRYCODE = COUNTRY.CODE AND COUNTRY.CONTINENT = 'Africa';
+
+--Draw The Triangle 2 
+DECLARE @i INT = 1
+WHILE (@i <= 20) 
+BEGIN
+   PRINT REPLICATE('* ', @i) 
+   SET @i = @i + 1
+END
+
+--Draw The Triangle 1 
+DECLARE @i INT = 20
+WHILE (@i > 0) 
+BEGIN
+   PRINT REPLICATE('* ', @i) 
+   SET @i = @i - 1
+END
+
+--Top Competitors 
+select h.hacker_id, h.name
+from submissions s
+inner join challenges c
+on s.challenge_id = c.challenge_id
+inner join difficulty d
+on c.difficulty_level = d.difficulty_level 
+inner join hackers h
+on s.hacker_id = h.hacker_id
+where s.score = d.score and c.difficulty_level = d.difficulty_level
+group by h.hacker_id, h.name
+having count(s.hacker_id) > 1
+order by count(s.hacker_id) desc, s.hacker_id asc
+
+--The Report 
+SELECT (CASE g.grade>=8 WHEN TRUE THEN s.name ELSE null END),g.grade,s.marks 
+FROM students s INNER JOIN grades g ON s.marks BETWEEN min_mark AND max_mark 
+ORDER BY g.grade DESC,s.name,s.marks;
+
+--Average Population of Each Continent 
+SELECT COUNTRY.CONTINENT, FLOOR(AVG(CITY.POPULATION))
+FROM CITY INNER JOIN COUNTRY
+ON CITY.COUNTRYCODE = COUNTRY.CODE
+GROUP BY COUNTRY.CONTINENT;
